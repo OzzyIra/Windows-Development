@@ -1,11 +1,16 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include<Windows.h>
+#include <cstdio>
+
 #define IDC_STATIC 1000
 #define IDC_EDIT 1001
 #define IDC_BUTTON 1002
 
+
 CONST CHAR g_sz_WINDOW_CLASS[] = "Main Window";
 
 INT CALLBACK WNDProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, INT nCmdShow)
 {
@@ -75,6 +80,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 		TranslateMessage(&msg);
 		DispatchMessageA(&msg);
 	}
+
 	return msg.message;
 }
 
@@ -119,6 +125,17 @@ INT CALLBACK WNDProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			NULL
 
 		);
+		break;
+	case WM_SIZE:
+	case WM_MOVE:
+	{
+		CONST INT SIZE = 256;
+		CHAR sz_pos[SIZE]{};
+		RECT myRect;
+		GetWindowRect(hwnd, &myRect);
+		sprintf(sz_pos, "%s Позиция: %ix%i Размер: %ix%i", g_sz_WINDOW_CLASS, myRect.left, myRect.top, myRect.right - myRect.left, myRect.bottom - myRect.top);
+		SendMessage(hwnd, WM_SETTEXT, NULL, (LPARAM)sz_pos);
+	}
 		break;
 	case WM_COMMAND:
 	{
